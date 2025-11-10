@@ -1,3 +1,4 @@
+package modeles;
 /**
  * Gestion des joueurs
  *
