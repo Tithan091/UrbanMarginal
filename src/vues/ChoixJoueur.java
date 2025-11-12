@@ -1,33 +1,61 @@
 package vues;
 
 import java.awt.EventQueue;
+
+import java.awt.Cursor;
 import java.awt.Dimension;
 
 import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ChoixJoueur extends JFrame {
+import controleurs.Controle;
+import controleurs.Global;
+import javax.swing.SwingConstants;
+
+public class ChoixJoueur extends JFrame implements Global{
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JLabel lblPersonnage;
 	private JTextField txtPseudo;
 	
 	private Arene frmArene;
+	private Controle controle;
+	
+	private int numPerso = 1;
+	
+	/**
+	 * Change le curseur de la souris en curseur par défault
+	 */
+	private void sourisNormale() {
+		contentPane.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
+	
+	/**
+	 * Change le curseur de la souris en doigt pointé
+	 */
+	private void sourisDoigt() {
+		contentPane.setCursor(new Cursor(Cursor.HAND_CURSOR));
+	}
 	
 	/**
 	 * Clic sur lblPrecedent
 	 * Sélection du personnage précedent
 	 */
 	private void lblPrecedent_clic() {
-		System.out.println("précedent");
+		numPerso--;
+		if (numPerso < 1) {
+			numPerso = MAXPERSO;
+		}
+		affichePerso();
 	}
 	
 	/**
@@ -35,23 +63,41 @@ public class ChoixJoueur extends JFrame {
 	 * Sélection du personnage suivant
 	 */
 	private void lblSuivant_clic() {
-		System.out.println("suivant");
+		numPerso++;
+		if (numPerso > MAXPERSO) {
+			numPerso = 1;
+		}
+		affichePerso();
 	}
 	
 	/**
 	 * Clic sur lblGo
-	 * Ouverture de la fenêtre Arene et création du personnage
+	 * Vérifier pseudo et ouverture de la frame Arene
 	 */
 	private void lblGo_clic() {
-		this.frmArene = new Arene();
-		this.frmArene.setVisible(true);
-		this.dispose();
+		if (!txtPseudo.getText().isBlank()) {
+			controle.evenementChoixJoueur(txtPseudo.getText(), numPerso);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "La saisie du pseudo est obligatoire.");
+			txtPseudo.requestFocus();
+		}
+	}
+	
+	/**
+	 * Affiche dans lblPersonnage le personnage actuellement sélectionné
+	 */
+	private void affichePerso() {
+		String chemin = PERSOPATH+numPerso+"marche1d1.gif";
+		URL ressource = getClass().getClassLoader().getResource(chemin);
+		System.out.println(ressource);
+		lblPersonnage.setIcon(new ImageIcon(ressource));
 	}
 	
 	/**
 	 * Create the frame.
 	 */
-	public ChoixJoueur() {
+	public ChoixJoueur(Controle controle) {
 		setTitle("Choice");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +106,11 @@ public class ChoixJoueur extends JFrame {
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		lblPersonnage = new JLabel("");
+		lblPersonnage.setHorizontalAlignment(SwingConstants.CENTER);
+		lblPersonnage.setBounds(141, 113, 121, 120);
+		contentPane.add(lblPersonnage);
 		
 		txtPseudo = new JTextField();
 		txtPseudo.setBounds(143, 244, 119, 22);
@@ -72,6 +123,14 @@ public class ChoixJoueur extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				lblPrecedent_clic();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				sourisDoigt();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				sourisNormale();
+			}
 		});
 		lblPrecedent.setBounds(56, 146, 46, 45);
 		contentPane.add(lblPrecedent);
@@ -81,6 +140,14 @@ public class ChoixJoueur extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				lblSuivant_clic();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				sourisDoigt();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				sourisNormale();
 			}
 		});
 		lblSuivant.setBounds(291, 146, 46, 45);
@@ -92,6 +159,14 @@ public class ChoixJoueur extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				lblGo_clic();
 			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				sourisDoigt();
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				sourisNormale();
+			}
 		});
 		lblGo.setBounds(311, 192, 63, 72);
 		contentPane.add(lblGo);
@@ -102,6 +177,9 @@ public class ChoixJoueur extends JFrame {
 		URL ressource = getClass().getClassLoader().getResource(chemin);
 		lblFond.setIcon(new ImageIcon(ressource));
 		contentPane.add(lblFond);
+		
+		this.controle = controle;
+		
+		affichePerso();
 	}
-
 }

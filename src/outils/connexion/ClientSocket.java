@@ -29,9 +29,9 @@ public class ClientSocket {
 				new Connection(socket, delegate) ;
 			}
 		} catch (UnknownHostException e) {
-			JOptionPane.showMessageDialog(null, "serveur non disponible");
-		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null, "IP incorrecte");
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "serveur non disponible");
 		}
 	}
 	
