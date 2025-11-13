@@ -1,6 +1,7 @@
 package vues;
 
 import java.awt.EventQueue;
+
 import java.awt.Dimension;
 
 import java.net.URL;
@@ -15,10 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextArea;
 
-public class Arene extends JFrame {
+import controleurs.Global;
+
+public class Arene extends JFrame implements Global {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	private JPanel jpnMurs;
 	private JTextField txtSaisie;
 
 	/**
@@ -33,6 +37,12 @@ public class Arene extends JFrame {
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		jpnMurs = new JPanel();
+		jpnMurs.setBounds(0, 0, LARGEURARENE, HAUTEURARENE);
+		jpnMurs.setOpaque(false);
+		jpnMurs.setLayout(null);
+		contentPane.add(jpnMurs);
 		
 		JLabel lblFond = new JLabel("");
 		lblFond.setBounds(0, 0, 800, 600);
@@ -53,5 +63,19 @@ public class Arene extends JFrame {
 		
 		JTextArea txtChat = new JTextArea();
 		jspChat.setViewportView(txtChat);
+	}
+	
+	public void ajoutMur(Object mur) {
+		jpnMurs.add((JLabel)mur);
+		jpnMurs.repaint();
+	}
+	
+	public JPanel getJpnMurs() {
+		return jpnMurs;
+	}
+	
+	public void setJpnMurs(JPanel jpnMurs) {
+		this.jpnMurs.add(jpnMurs);
+		this.jpnMurs.repaint();
 	}
 }

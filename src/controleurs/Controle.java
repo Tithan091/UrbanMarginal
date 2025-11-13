@@ -1,5 +1,7 @@
 package controleurs;
 
+import javax.swing.JPanel;
+
 import modeles.*;
 import vues.*;
 
@@ -33,6 +35,31 @@ public class Controle implements AsyncResponse, Global {
 	}
 	
 	/**
+	 * appelée lorsque le JeuServeur est sollicité par une autre classe que lui-même
+	 * @param ordre type d'informations à transmettre
+	 * @param info infos à transmettre
+	 */
+	public void evenementJeuServeur(String ordre, Object info) {
+		if (ordre == AJOUTMUR) {
+			frmArene.ajoutMur(info);
+		}
+		if (ordre == AJOUTPANELMURS) {
+			leJeu.envoi((Connection)info, frmArene.getJpnMurs());
+		}
+	}
+	
+	/**
+	 * appelée lorsque le JeuClient est sollicité par une autre classe que lui-même
+	 * @param ordre type d'informations à transmettre
+	 * @param info infos à transmettre
+	 */
+	public void evenementJeuClient(String ordre, Object info) {
+		if (ordre == AJOUTPANELMURS) {
+			frmArene.setJpnMurs((JPanel)info);
+		}
+	}
+	
+	/**
 	 * appelée lorsque le type de jeu a été choisi
 	 * @param info indique si l'application est utilisée en tant que serveur ou client
 	 */
@@ -43,6 +70,7 @@ public class Controle implements AsyncResponse, Global {
 			
 			frmEntreeJeu.dispose();
 			frmArene = new Arene();
+			((JeuServeur)leJeu).constructionMurs();
 			frmArene.setVisible(true);
 		}
 		else {
