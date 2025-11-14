@@ -1,7 +1,8 @@
 package modeles;
 import java.util.ArrayList;
-
 import java.util.Hashtable;
+
+import javax.swing.JLabel;
 
 import controleurs.Controle;
 import controleurs.Global;
@@ -32,19 +33,20 @@ public class JeuServeur extends Jeu implements Global {
 
 	@Override
 	public void connexion(Connection connection) {
-		lesJoueurs.put(connection, new Joueur());
+		lesJoueurs.put(connection, new Joueur(this));
 	}
 
 	@Override
 	public void reception(Connection connection, Object info) {
 		String[] message = ((String)info).split(SEPARATOR);
 		switch(message[0]) {
-		case PSEUDOINFO:
+		case DEMANDEPANELMURS:
 			controle.evenementJeuServeur(AJOUTPANELMURS, connection);
-			
+			break;
+		case PSEUDOINFO:
 			String pseudo = message[1];
 			Integer numPerso = Integer.parseInt(message[2]);
-			this.lesJoueurs.get(connection).initPerso(pseudo, numPerso);
+			this.lesJoueurs.get(connection).initPerso(pseudo, numPerso, this.lesMurs, this.lesJoueurs.values());
 			break;
 		}
 	}
@@ -59,6 +61,15 @@ public class JeuServeur extends Jeu implements Global {
 	 */
 	public void envoi() {
 	}
+	
+	/**
+	 * Envoi du nouveau panel de jeu vers tous les clients
+	 */
+	public void envoiJeuATous() {
+		for (Connection connection : this.lesJoueurs.keySet()) {
+			this.controle.evenementJeuServeur(MODIFPANELJEU, connection);
+		}
+	}
 
 	/**
 	 * Génération des murs
@@ -71,5 +82,8 @@ public class JeuServeur extends Jeu implements Global {
 			controle.evenementJeuServeur(AJOUTMUR, ((Objet)mur).getJLabel());
 		}
 	}
-
+	
+	public void ajoutJLabelJeuArene(JLabel label) {
+		controle.evenementJeuServeur(AJOUTLABELJEU, label);
+	}
 }

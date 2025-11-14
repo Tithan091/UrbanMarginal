@@ -1,6 +1,7 @@
 package controleurs;
 
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import modeles.*;
 import vues.*;
@@ -40,11 +41,19 @@ public class Controle implements AsyncResponse, Global {
 	 * @param info infos à transmettre
 	 */
 	public void evenementJeuServeur(String ordre, Object info) {
-		if (ordre == AJOUTMUR) {
+		switch(ordre) {
+		case AJOUTMUR:
 			frmArene.ajoutMur(info);
-		}
-		if (ordre == AJOUTPANELMURS) {
+			break;
+		case AJOUTPANELMURS:
 			leJeu.envoi((Connection)info, frmArene.getJpnMurs());
+			break;
+		case AJOUTLABELJEU:
+			frmArene.ajoutJLabelJeu((JLabel)info);
+			break;
+		case MODIFPANELJEU:
+			leJeu.envoi((Connection)info, frmArene.getJpnJeu());
+			break;
 		}
 	}
 	
@@ -54,8 +63,16 @@ public class Controle implements AsyncResponse, Global {
 	 * @param info infos à transmettre
 	 */
 	public void evenementJeuClient(String ordre, Object info) {
-		if (ordre == AJOUTPANELMURS) {
+		switch(ordre) {
+		case DEMANDEPANELMURS:
+			leJeu.envoi(((JeuClient)leJeu).getConnexionServeur(), DEMANDEPANELMURS);
+			break;
+		case AJOUTPANELMURS:
 			frmArene.setJpnMurs((JPanel)info);
+			break;
+		case MODIFPANELJEU:
+			frmArene.setJpnJeu((JPanel)info);
+			break;
 		}
 	}
 	
@@ -75,6 +92,7 @@ public class Controle implements AsyncResponse, Global {
 		}
 		else {
 			clientSocket = new ClientSocket(this, info, PORT);
+			this.evenementJeuClient(DEMANDEPANELMURS, null);
 		}
 	}
 	
@@ -106,6 +124,8 @@ public class Controle implements AsyncResponse, Global {
 				frmChoixJoueur.setVisible(true);
 				
 				leJeu = new JeuClient(this);
+				
+				leJeu.connexion(connection);
 			}
 			leJeu.connexion(connection);
 			break;

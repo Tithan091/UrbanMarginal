@@ -24,11 +24,12 @@ public class Connection extends Thread {
 	 * objet de lien avec une autre classe qui implémente AsyncResponse pour transférer les réponses
 	 */
 	private AsyncResponse delegate;
-
+	
 	/**
 	 * Constructeur : crée une connexion à partir d'un socket (contenant les spécificités de l'ordinateur distant)
 	 * @param socket objet de connexion de type serveur ou client
 	 * @param delegate instance de la classe vers laquelle il faut transférer les réponses
+	 * @param info éventuelle info à transmettre au moment de la connexion
 	 */
 	public Connection(Socket socket, AsyncResponse delegate) {
 		this.delegate = delegate;

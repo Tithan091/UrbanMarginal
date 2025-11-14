@@ -14,6 +14,8 @@ public class JeuClient extends Jeu implements Global {
 	
 	private Connection connexionServeur;
 	
+	private boolean mursOk = false;
+	
 	/**
 	 * Controleur
 	 */
@@ -29,7 +31,13 @@ public class JeuClient extends Jeu implements Global {
 	@Override
 	public void reception(Connection connection, Object info) {
 		if (info instanceof JPanel) {
-			controle.evenementJeuClient(AJOUTPANELMURS, info);
+			if (!this.mursOk) {
+				controle.evenementJeuClient(AJOUTPANELMURS, info);
+				this.mursOk = true;
+			}
+			else {
+				controle.evenementJeuClient(MODIFPANELJEU, info);
+			}
 		}
 	}
 
@@ -42,7 +50,10 @@ public class JeuClient extends Jeu implements Global {
 	 * classe Jeu
 	 */
 	public void envoi(String info) {
-		this.envoi(connexionServeur, info);
+		super.envoi(connexionServeur, info);
 	}
-
+	
+	public Connection getConnexionServeur() {
+		return this.connexionServeur;
+	}
 }

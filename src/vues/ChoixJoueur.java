@@ -27,7 +27,6 @@ public class ChoixJoueur extends JFrame implements Global{
 	private JLabel lblPersonnage;
 	private JTextField txtPseudo;
 	
-	private Arene frmArene;
 	private Controle controle;
 	
 	private int numPerso = 1;

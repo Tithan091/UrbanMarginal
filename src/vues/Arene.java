@@ -23,6 +23,7 @@ public class Arene extends JFrame implements Global {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JPanel jpnMurs;
+	private JPanel jpnJeu;
 	private JTextField txtSaisie;
 
 	/**
@@ -37,6 +38,12 @@ public class Arene extends JFrame implements Global {
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		jpnJeu = new JPanel();
+		jpnJeu.setBounds(0, 0, LARGEURARENE, HAUTEURARENE);
+		jpnJeu.setOpaque(false);
+		jpnJeu.setLayout(null);
+		contentPane.add(jpnJeu);
 		
 		jpnMurs = new JPanel();
 		jpnMurs.setBounds(0, 0, LARGEURARENE, HAUTEURARENE);
@@ -77,5 +84,20 @@ public class Arene extends JFrame implements Global {
 	public void setJpnMurs(JPanel jpnMurs) {
 		this.jpnMurs.add(jpnMurs);
 		this.jpnMurs.repaint();
+	}
+	
+	public void ajoutJLabelJeu(JLabel label) {
+		jpnJeu.add(label);
+		jpnJeu.repaint();
+	}
+	
+	public JPanel getJpnJeu() {
+		return jpnJeu;
+	}
+	
+	public void setJpnJeu(JPanel jpnJeu) {
+		this.jpnJeu.removeAll();
+		this.jpnJeu.add(jpnJeu);
+		this.jpnJeu.repaint();
 	}
 }

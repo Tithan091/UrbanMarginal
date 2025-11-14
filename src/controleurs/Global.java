@@ -1,5 +1,7 @@
 package controleurs;
 
+import outils.connexion.Connection;
+
 public interface Global {
 	public static final int PORT = 6666;
 	
@@ -15,17 +17,35 @@ public interface Global {
 	public static final String PSEUDOINFO = "pseudo";
 	
 	public static final String AJOUTMUR = "ajout_mur";
+	public static final String DEMANDEPANELMURS = "demande_panel_murs";
 	public static final String AJOUTPANELMURS = "ajout_panel_murs";
+	
+	public static final String AJOUTLABELJEU = "ajout_label_jeu";
+	public static final String MODIFPANELJEU = "modif_panel_jeu";
 	
 	public static final String CHEMINSEPARATOR = "/";
 	
 	/**
 	 * chemin pour accéder à une image de personnage
-	 * exemple pour chemin valide : PERSOPATH"1marche1d1.gif"
+	 * exemple pour chemin valide : PERSOPATH + "1marche1d1.gif"
 	 */
 	public static final String PERSOPATH = "personnages"+CHEMINSEPARATOR+"perso";
 	
+	public static final String ETATMARCHE = "marche";
+	public static final String ETATTOUCHE = "touche";
+	public static final String ETATMORT = "mort";
+	
+	public static final String EXTPERSOFILE = ".gif";
+	
+	public static final int GAUCHE = 0;
+	public static final int DROITE = 1;
+	
 	public static final int MAXPERSO = 3;
+	
+	public static final int HAUTEURPERSO = 44;
+	public static final int LARGEURPERSO = 39;
+	public static final int HAUTEURMESSAGE = 8;
+	public static final int MARGEMESSAGE = 10;
 	
 	/**
 	 * vie de départ pour tous les joueurs
