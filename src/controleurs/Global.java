@@ -5,6 +5,9 @@ import outils.connexion.Connection;
 public interface Global {
 	public static final int PORT = 6666;
 	
+	public static final String SERVEUR = "serveur";
+	public static final String CLIENT = "client";
+	
 	/**
 	 * séparateur utilisé lors d'envois d'informations à un serveur distant
 	 */
@@ -14,7 +17,11 @@ public interface Global {
 	 * utilisé lors d'un envoi d'informations à un serveur distant
 	 * pour préciser le type d'informations
 	 */
-	public static final String PSEUDOINFO = "pseudo";
+	public static final String PSEUDO = "pseudo";
+	
+	public static final String TCHAT = "tchat";
+	public static final String AJOUTMESSAGE = "ajout_message";
+	public static final String MODIFTCHAT = "modif_tchat";
 	
 	public static final String AJOUTMUR = "ajout_mur";
 	public static final String DEMANDEPANELMURS = "demande_panel_murs";

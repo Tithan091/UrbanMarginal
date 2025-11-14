@@ -54,6 +54,10 @@ public class Controle implements AsyncResponse, Global {
 		case MODIFPANELJEU:
 			leJeu.envoi((Connection)info, frmArene.getJpnJeu());
 			break;
+		case AJOUTMESSAGE:
+			frmArene.ajoutTchat((String)info);
+			((JeuServeur)this.leJeu).envoi(this.frmArene.getTxtChatText());
+			break;
 		}
 	}
 	
@@ -73,6 +77,9 @@ public class Controle implements AsyncResponse, Global {
 		case MODIFPANELJEU:
 			frmArene.setJpnJeu((JPanel)info);
 			break;
+		case MODIFTCHAT:
+			frmArene.setTxtChatText((String)info);
+			break;
 		}
 	}
 	
@@ -81,12 +88,12 @@ public class Controle implements AsyncResponse, Global {
 	 * @param info indique si l'application est utilisée en tant que serveur ou client
 	 */
 	public void evenementEntreeJeu(String info) {
-		if (info == "serveur") {			
+		if (info == SERVEUR) {			
 			serverSocket = new ServeurSocket(this, PORT);
 			leJeu = new JeuServeur(this);
 			
 			frmEntreeJeu.dispose();
-			frmArene = new Arene();
+			frmArene = new Arene(this, SERVEUR);
 			((JeuServeur)leJeu).constructionMurs();
 			frmArene.setVisible(true);
 		}
@@ -103,10 +110,18 @@ public class Controle implements AsyncResponse, Global {
 	 */
 	public void evenementChoixJoueur(String pseudo, int perso) {
 		JeuClient client = (JeuClient)leJeu;
-		client.envoi(PSEUDOINFO+SEPARATOR+pseudo+SEPARATOR+perso);
+		client.envoi(PSEUDO+SEPARATOR+pseudo+SEPARATOR+perso);
 		
 		frmChoixJoueur.dispose();
 		frmArene.setVisible(true);
+	}
+	
+	/**
+	 * appelée lorsqu'un joueur envoie un message via le tchat
+	 * @param message texte à envoyer au serveur
+	 */
+	public void evenementArene(String message) {
+		((JeuClient)leJeu).envoi(TCHAT + SEPARATOR + message);
 	}
 	
 	public void envoi(Connection connection, Object info) {
@@ -119,7 +134,7 @@ public class Controle implements AsyncResponse, Global {
 		case "connexion":
 			if (!(leJeu instanceof JeuServeur)) {
 				frmEntreeJeu.dispose();
-				frmArene = new Arene();
+				frmArene = new Arene(this, CLIENT);
 				frmChoixJoueur = new ChoixJoueur(this);
 				frmChoixJoueur.setVisible(true);
 				

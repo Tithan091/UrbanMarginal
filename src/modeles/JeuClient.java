@@ -39,6 +39,9 @@ public class JeuClient extends Jeu implements Global {
 				controle.evenementJeuClient(MODIFPANELJEU, info);
 			}
 		}
+		if (info instanceof String) {
+			controle.evenementJeuClient(MODIFTCHAT, info);
+		}
 	}
 
 	@Override

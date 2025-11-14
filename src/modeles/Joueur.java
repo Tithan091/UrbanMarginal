@@ -136,7 +136,7 @@ public class Joueur extends Objet implements Global {
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Gain de points de vie après avoir touché un joueur
 	 */
@@ -176,4 +176,11 @@ public class Joueur extends Objet implements Global {
 	public void departJoueur() {
 	}
 	
+	/**
+	 * getter sur pseudo
+	 * @return pseudo
+	 */
+	public String getPseudo() {
+		return this.pseudo;
+	}
 }

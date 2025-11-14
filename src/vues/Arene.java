@@ -8,15 +8,16 @@ import java.net.URL;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextArea;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-import controleurs.Global;
+import controleurs.*;
 
 public class Arene extends JFrame implements Global {
 
@@ -25,11 +26,30 @@ public class Arene extends JFrame implements Global {
 	private JPanel jpnMurs;
 	private JPanel jpnJeu;
 	private JTextField txtSaisie;
+	private JTextArea txtChat;
+	
+	private Controle controle;
 
+	/**
+	 * evenement touche appuyée en utilisant txtSaisie
+	 * si la touche est entrée, vérifier le contenu de txtSaisie
+	 * et l'envoyer au serveur
+	 * @param e evenement contenant la touche appuyée
+	 */
+	private void txtSaisie_KeyPressed(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			if (!txtSaisie.getText().isBlank()) {
+				
+				controle.evenementArene(txtSaisie.getText());
+				txtSaisie.setText("");
+			}
+		}
+	}
+	
 	/**
 	 * Create the frame.
 	 */
-	public Arene() {
+	public Arene(Controle controle, String typeJeu) {
 		setTitle("Arena");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -58,18 +78,29 @@ public class Arene extends JFrame implements Global {
 		lblFond.setIcon(new ImageIcon(ressource));
 		contentPane.add(lblFond);
 		
-		txtSaisie = new JTextField();
-		txtSaisie.setBounds(0, 600, 800, 25);
-		contentPane.add(txtSaisie);
-		txtSaisie.setColumns(10);
+		if (typeJeu == CLIENT) {
+			txtSaisie = new JTextField();
+			txtSaisie.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					txtSaisie_KeyPressed(e);
+				}
+			});
+			txtSaisie.setBounds(0, 600, 800, 25);
+			contentPane.add(txtSaisie);
+			txtSaisie.setColumns(10);
+		}
 		
 		JScrollPane jspChat = new JScrollPane();
 		jspChat.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		jspChat.setBounds(0, 625, 800, 140);
 		contentPane.add(jspChat);
 		
-		JTextArea txtChat = new JTextArea();
+		txtChat = new JTextArea();
+		txtChat.setEditable(false);
 		jspChat.setViewportView(txtChat);
+		
+		this.controle = controle;
 	}
 	
 	public void ajoutMur(Object mur) {
@@ -99,5 +130,32 @@ public class Arene extends JFrame implements Global {
 		this.jpnJeu.removeAll();
 		this.jpnJeu.add(jpnJeu);
 		this.jpnJeu.repaint();
+	}
+	
+	/**
+	 * getter sur le contenu de txtChat
+	 * @return le contenu (String) de txtChat
+	 */
+	public String getTxtChatText(){
+		return this.txtChat.getText();
+	}
+	
+	/**
+	 * setter sur le contenu de txtChat
+	 * @param text nouveau contenu de txtChat
+	 */
+	public void setTxtChatText(String text) {
+		this.txtChat.setText(text);
+		this.txtChat.setCaretPosition(this.txtChat.getDocument().getLength());
+	}
+	
+	/**
+	 * ajoute une phrase au tchat côté serveur
+	 * @param text texte à ajouter au tchat côté serveur
+	 */
+	public void ajoutTchat(String text) {
+		String newText = this.txtChat.getText() + text + "\r\n";
+		this.txtChat.setText(newText);
+		this.txtChat.setCaretPosition(this.txtChat.getDocument().getLength());
 	}
 }

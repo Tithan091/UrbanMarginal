@@ -2,7 +2,6 @@ package vues;
 
 import java.awt.EventQueue;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -11,9 +10,9 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import controleurs.Controle;
+import controleurs.*;
 
-public class EntreeJeu extends JFrame {
+public class EntreeJeu extends JFrame implements Global {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -26,7 +25,7 @@ public class EntreeJeu extends JFrame {
 	 * Démarrage du serveur et ouverture de la fenêtre Arene
 	 */
 	private void btnStart_clic() {
-		controle.evenementEntreeJeu("serveur");
+		controle.evenementEntreeJeu(SERVEUR);
 	}
 	
 	/**

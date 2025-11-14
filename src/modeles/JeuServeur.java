@@ -23,7 +23,7 @@ public class JeuServeur extends Jeu implements Global {
 	 * Collection de joueurs
 	 */
 	private Hashtable<Connection, Joueur> lesJoueurs = new Hashtable<Connection, Joueur>();
-
+	
 	/**
 	 * Constructeur
 	 */
@@ -39,14 +39,22 @@ public class JeuServeur extends Jeu implements Global {
 	@Override
 	public void reception(Connection connection, Object info) {
 		String[] message = ((String)info).split(SEPARATOR);
+		String ligne;
 		switch(message[0]) {
 		case DEMANDEPANELMURS:
 			controle.evenementJeuServeur(AJOUTPANELMURS, connection);
 			break;
-		case PSEUDOINFO:
+		case PSEUDO:
 			String pseudo = message[1];
 			Integer numPerso = Integer.parseInt(message[2]);
-			this.lesJoueurs.get(connection).initPerso(pseudo, numPerso, this.lesMurs, this.lesJoueurs.values());
+			this.lesJoueurs.get(connection).initPerso(pseudo, numPerso,
+					this.lesMurs, this.lesJoueurs.values());
+			ligne = "*** " + pseudo + " vient de se connecter ***";
+			controle.evenementJeuServeur(AJOUTMESSAGE, ligne);
+			break;
+		case TCHAT:
+			ligne = lesJoueurs.get(connection).getPseudo() + " > " + message[1];
+			controle.evenementJeuServeur(AJOUTMESSAGE, ligne);
 			break;
 		}
 	}
@@ -59,7 +67,10 @@ public class JeuServeur extends Jeu implements Global {
 	 * Envoi d'une information vers tous les clients fais appel plusieurs fois à
 	 * l'envoi de la classe Jeu
 	 */
-	public void envoi() {
+	public void envoi(Object info) {
+		for (Connection connection : this.lesJoueurs.keySet()) {
+			super.envoi(connection, info);
+		}
 	}
 	
 	/**
